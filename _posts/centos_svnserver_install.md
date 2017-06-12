@@ -9,7 +9,7 @@ title: subversion 安装配置
 ---
 
 ## 安装开始
-  1、官方的安装指南：http://subversion.apache.org/packages.html#centos<br/>
+&nbsp;&nbsp;1、官方的安装指南：http://subversion.apache.org/packages.html#centos<br/>
     
   2、从文档中可以看出来最简单的一种安装方式：yum install subversion，不过直接安装不一定是最新的版本，如果要安装其他版本，这里提供两种办法：<br/>
     一、就是通过RPM命令替换subversion包，再执行yum install subversion安装<br/>
