@@ -23,6 +23,16 @@ title: subversion 安装配置
 >>创建仓库之后会在/home/svnhome/创建文件夹project,project文件夹中会有仓库的初始化文件<br/>
         
 >7、cd /home/svnhome/project/conf/;进入到仓库的配置文件初始化的三个文件：authz,passwd,svnserve.conf<br/>
-    
-    
-    
+
+>8、vim svnservi.conf;修改svn仓库的配置文件<br/>
+>>anon-access = none<br/>
+>>auth-access = write<br/>
+>>password-db = passwd<br/>
+>>authz-db = authz<br/>
+>>realm = project<br/>
+
+>9、修改authz,passwd两个文件，配置用户及权限，文件里面已经注解有配置说明这里就不添加配置<br/>
+
+>10、启动这个仓库:svnserve -d -r /svn/svnhome/project<br/>
+
+>11、测试这个链接:svn list svn://192.168.1.xx/project 
