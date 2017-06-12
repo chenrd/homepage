@@ -1,6 +1,6 @@
 ---
 categories: SVN
-date: 2017-06-16 11:54:00
+date: 2017-06-16 11:54
 description: 'linux-centos下安装配置svn服务器'
 keywords: svn
 layout: post
