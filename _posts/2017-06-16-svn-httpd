@@ -1,0 +1,33 @@
+---
+categories: SVN
+date: 2017-06-16 11:54
+description: 'linux-centos下安装配置svn-httpd'
+keywords: svn
+layout: post
+status: public
+title: subversion httpd 配置
+---
+
+## 安装apache 与 svn的支持，可以通过http:// 访问到svn://
+>1、$ yum install mod_dav_svn 安装svn客户端模块  
+
+>2、$ vim /etc/httpd/conf.d/subversion.conf启用svn的模块  
+>>LoadModule dav_svn_module     modules/mod_dav_svn.so  
+>>LoadModule authz_svn_module   modules/mod_authz_svn.so 
+
+>3、$ vim /etc/httpd/conf/httpd.conf 到最后一行添加映射  
+>><Location /project>  
+>>DAV svn  
+>>SVNPath /home/svn/project/  
+>>AuthType Basic  
+>>AuthName "svn for project"  
+>>AuthUserFile /home/svn/passwd  
+>>AuthzSVNAccessFile /home/svn/project/conf/authz  
+>>Satisfy all  
+>>Require valid-user  
+>></Location>  
+
+>4、上一步的配置中指定的AuthUserFile文件/home/svn/passwd 要命令生成或添加用户  
+>>$ htpasswd -c /home/svn/passwd 用户名  
+
+5、重新启动访问
