@@ -65,7 +65,7 @@ Thread-25:2833
 结论：单个线程执行1000条数据的插入大概要2800毫秒的时间，所有线程执行完成大概也是2800毫秒，补充一下redis服务器部署在内网，测试运行在本机，通过内网链接
 ，可以看得出来基本上redis的插入效率可以说是在2800毫秒内完成了10W数据的插入，但是Java程序执行单个线程执行1000条数据的插入就需要2800毫秒，
 
->>测试单个线程执行10W数据的插入
+>>测试单个线程执行10W数据的插入  
     public static void main(String[] args) {
         Jedis jedis = new Jedis("192.168.2.99", 6330);
         long currentTime = System.currentTimeMillis();
