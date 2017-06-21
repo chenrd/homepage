@@ -16,7 +16,8 @@ currentTimeMillis(time1),如果time1没有过期，T2,T3继续循环，至到loo
 
 >>按照上面的方法有一个问题，因为不是阻塞式的锁，所以需要while循环中 sleep(millis)不断的去重试获取锁，那么这个millis的值设置多少合适呢  
 
->>测试多线程执行10W数据的插入需要多长时间
+>>测试多线程执行10W数据的插入需要多长时间  
+
     public class RedisTest {
         public static int number = 0;
 	
