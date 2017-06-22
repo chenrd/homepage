@@ -42,5 +42,5 @@ PUT /testindex,命令回去创建一个索引：testindex,创建一个索引默�
           "number_of_replicas" : 1
        }
     }  
-    
+
 创建一个索引，指定3个主分片，1个副分片（每个主分片都有1个副分片）  
