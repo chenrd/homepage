@@ -26,3 +26,15 @@ Elasticsearch将返回正常的元数据且响应状态码是201 Created，文�
     Content-Type: text/plain; charset=UTF-8
     Content-Length: 0
 
+4、删除文档DELETE /website/blog/123  
+Elasticsearch将返回200 OK状态码和以下响应体。注意_version数字已经增加了。  
+    
+    {
+      "found" :    true,
+      "_index" :   "website",
+      "_type" :    "blog",
+      "_id" :      "123",
+      "_version" : 3
+    }
+
+5、
