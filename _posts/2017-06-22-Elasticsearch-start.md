@@ -16,7 +16,7 @@ title: Elasticsearch安装
 
 
 ## 学习的总结  
-1、集群，节点，索引，分片，备份分片概念解析  
+1、集群，节点，索引，分片，备份分片概念解析  
 一、传统数据库与elasticsearch概率关系对比  
     
     Relational DB -> Databases -> Tables -> Rows -> Columns
