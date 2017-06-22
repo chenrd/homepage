@@ -26,9 +26,20 @@ Elasticsearch集群可以包含多个索引(indices)（数据库），每一个�
 
 二、集群的健康性green、yellow或red，通过命令GET /_cluster/health查看  
 status字段提供一个综合的指标来表示集群的的服务状况。三种颜色各自的含义：  
-颜色	意义  
 green	所有主要分片和复制分片都可用  
 yellow	所有主要分片可用，但不是所有复制分片都可用  
 red	不是所有的主要分片都可用  
 在接下来的章节，我们将说明什么是主要分片(primary shard)和复制分片(replica shard)，并说明这些颜色（状态）在实际环境中的意义。  
 
+三、索引与分片的关系  
+PUT /testindex,命令回去创建一个索引：testindex,创建一个索引默认会创建5个主分片，文档保存在分片当中，客户端不直接与分片交互，索引建立与分片的联系
+客户端通过索引检索文档  
+
+    PUT /blogs
+    {
+       "settings" : {
+          "number_of_shards" : 3,
+          "number_of_replicas" : 1
+       }
+    }
+创建一个索引，指定3个主分片，1个副分片（每个主分片都有1个副分片）  
