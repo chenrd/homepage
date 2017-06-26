@@ -58,9 +58,17 @@ Elasticsearch将返回200 OK状态码和以下响应体。注意_version数字�
     { "create": { "_index": "website", "_type": "blog", "_id": "123" }}
     { "title":    "Cannot create - it already exists" }
     { "index":  { "_index": "website", "_type": "blog", "_id": "123" }}
-    { "title":    "But we can update it" } ／／最后添加换行符  
+    { "title":    "But we can update it" } 
+    //最后添加换行符  
     
-7、
+7、搜索命令：_search. 
+GET /_search?q=mary 返回包含"mary"字符的所有文档，_all字段，查询不指定要查询的字段，会把所有的字段拼接成_all字段. 
+/gb,us/user,tweet/_search.  
+/g*,u*/_search. 
+GET /_all/tweet/_search?q=tweet:elasticsearch  
+GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name字段中包含"john"和tweet字段包含"mary"的结果  
+
+8、分页：GET /_search?size=5&form=10. 
 
 
 
