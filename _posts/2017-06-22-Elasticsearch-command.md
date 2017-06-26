@@ -37,4 +37,33 @@ Elasticsearch将返回200 OK状态码和以下响应体。注意_version数字�
       "_version" : 3
     }
 
-5、
+5、检索多个文档，合并请求到一次检索:mget. 
+    
+    POST /_mget
+    {...}
+    //不在同一个_index中
+    
+    POST /website/blog/_mget
+    {...}
+    //在同一个_index中
+    
+    POST /website/blog/_mget
+    {
+       "ids" : [ "2", "1" ]
+    }
+    
+6、操作批量：POST /_bulkd 批量请求性能：请求体的物理内存大小非常重要，一般来说一次批量请求控制在5-15MB之间比较好.  
+    
+    POST /_bulk
+    { "create": { "_index": "website", "_type": "blog", "_id": "123" }}
+    { "title":    "Cannot create - it already exists" }
+    { "index":  { "_index": "website", "_type": "blog", "_id": "123" }}
+    { "title":    "But we can update it" } ／／最后添加换行符
+    
+7、
+
+
+
+
+
+
