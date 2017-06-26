@@ -58,7 +58,7 @@ Elasticsearch将返回200 OK状态码和以下响应体。注意_version数字�
     { "create": { "_index": "website", "_type": "blog", "_id": "123" }}
     { "title":    "Cannot create - it already exists" }
     { "index":  { "_index": "website", "_type": "blog", "_id": "123" }}
-    { "title":    "But we can update it" } ／／最后添加换行符
+    { "title":    "But we can update it" } ／／最后添加换行符  
     
 7、
 
