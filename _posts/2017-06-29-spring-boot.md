@@ -30,4 +30,13 @@ title: spring-boot学习笔记
 
 You may want your application to be restarted or reloaded when you make changes to files that are not on the classpath. To do so, use the    
 spring.devtools.restart.additional-paths property to configure additional paths to watch for changes. You can use the 
-spring.devtools.restart.exclude property described above to control whether changes beneath the additional paths will trigger a full restart or just a live reload.
+spring.devtools.restart.exclude property described above to control whether changes beneath the additional paths will trigger a full restart or just a live reload.  
+
+## spring-boot 缓存记录  
+spring-boot 支持的几个库使用缓存来提高性能。例如，模板引擎将缓存编译的模板，以避免重复解析模板文件  
+此外，Spring MVC可以在服务静态资源时向响应添加HTTP缓存头  
+虽然缓存在生产中非常有利，但在开发过程中可能会产生反效果，从而阻止您看到刚刚在应用程序中进行的更改。出于这样的原因spring-boot-devtools会禁用这些缓存选项。  
+spring.thymeleaf.cache
+
+
+
