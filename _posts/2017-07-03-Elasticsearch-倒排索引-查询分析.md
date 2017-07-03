@@ -24,4 +24,13 @@ title: Elasticsearch倒排索引-查询分析器
     set, shape, semi, transpar, call, set_tran, 5
     
 3、确切值查询将不会使用分析器  
-4、测试分析器：GET /_analyze?analyzer=standard&text=Text to analyze  
+4、测试分析器：GET /_analyze?analyzer=standard&text=Text to analyze  
+5、字段类型：GET /gb/_mapping/tweet  
+
+6、复合类型，内部对象，及数组  
+Elasticsearch的索引会对内部文件进行扁平化处理，{name: "test", child:{name: "小孩", age: 2}}  
+-> {name: "test", "child.name":"小孩", "child.age": 2}  
+数组：{name: "test", child:[{name: "小孩1", age: 2}, {name: "小孩2", age: 1}]}  
+-> {name: "test", "child.name": ["小孩1", "小孩2"], "child.age":[2, 1]}  
+
+
