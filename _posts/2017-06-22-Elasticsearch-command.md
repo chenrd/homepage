@@ -72,6 +72,26 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
 
 9、分页：GET /_search?size=5&form=10  
 
+10、GET /gb/tweet/_validate/query 验证查询语句是否合法，GET /_validate/query?explain 加explain会返回explanation描述  
+    
+    {
+       "query": {
+          "tweet" : {
+             "match" : "really powerful"
+          }
+       }
+    }
+    
+上面参数，下面返回：
+    
+    {
+      "valid" :         false,
+      "_shards" : {
+        "total" :       1,
+        "successful" :  1,
+        "failed" :      0
+      }
+    }
 
 
 
