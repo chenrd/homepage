@@ -83,7 +83,7 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
     }
     
 上面参数，下面返回：  
-    
+
     {
         "valid" :         false,
         "_shards" : {
@@ -92,10 +92,3 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
             "failed" :      0
         }
     }
-
-
-
-
-
-
-
