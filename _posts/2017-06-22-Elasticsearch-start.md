@@ -37,6 +37,7 @@ $ curl 'http://localhost:9200/?pretty'
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;配置文件elasticsearch.yml
+
 |属性名称                |描述            |
 |:----------------------|:--------------|
 |cluster.name           |集群名称，在用一个网络环境下，通过该字段自动组成集群 |
@@ -53,6 +54,7 @@ $ curl 'http://localhost:9200/?pretty'
 |action.destructive_requires_name|true,删除节点的时候要显示名称  |
 
 ### 集群、分片、索引、文档
+
 下一个重要命令：集群健康检查
 
 |颜色         |意义            |
