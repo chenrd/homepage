@@ -276,11 +276,12 @@ PUT /gb <1>
 
 #### 更新映射
 
-> ###重要
+> 重要
 >
 >&nbsp;&nbsp;&nbsp;&nbsp;你可以向已有映射中增加字段，但你不能修改它。如果一个字段在映射中已经存在，这可能意味着那个字段的数据已经被索引。如果你改变了字段映射，那已经被索引的数据将错误并且不能被正确的搜索到。
 >
 >&nbsp;&nbsp;&nbsp;&nbsp;类似常用命令章节中：字符串排序
+
 ```
 PUT /gb/_mapping/tweet
 {
@@ -291,6 +292,100 @@ PUT /gb/_mapping/tweet
     }
   }
 }
+```
+
+#### 模板
+
+&nbsp;&nbsp;&nbsp;&nbsp;索引可使用预定义的模板进行创建,这个模板称作Index templates。模板设置包括settings和mappings，通过模式匹配的方式使得多个索引重用一个模板，例如：
+
+查看定义的模板：
+
+```
+curl -XGET localhost:9200/_template/template_1 
+```
+
+删除模板：
+
+```
+curl -XDELETE localhost:9200/_template/template_1  
+```
+
+下面定义的模板template_1将对用te开头的新索引都是有效。
+
+```
+curl -XPUT localhost:9200/_template/template_1 -d '
+{
+    "template" : "te*",
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "type1" : {
+            "_source" : {"enabled" : false }
+        }
+    }
+}
+'
+```
+
+模板中也可以包含别别名的定义，如下：
+
+```
+curl -XPUT localhost:9200/_template/template_1 -d '
+{
+    "template" : "te*",
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "aliases" : {
+        "alias1" : {},
+        "alias2" : {
+            "filter" : {
+                "term" :{"user" : "kimchy" }
+            },
+            "routing" :"kimchy"
+        },
+        "{index}-alias" : {} 
+    }
+}
+```
+
+多个索引模板：
+
+&nbsp;&nbsp;&nbsp;&nbsp;当存在多个索引模板时并且某个索引两者都匹配时，settings和mpapings将合成一个配置应用在这个索引上。合并的顺序可由索引模板的order属性来控制。
+
+下面order为1的配置将覆盖order为0的配置，最终索引的配置source的enabled为true。
+
+```
+curl -XPUT localhost:9200/_template/template_1 -d '
+{
+    "template" : "*",
+    "order" : 0,
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "type1" : {
+            "_source" : {"enabled" : false }
+        }
+    }
+}
+'
+==================================================================
+curl -XPUT localhost:9200/_template/template_2 -d '
+{
+    "template" : "te*",
+    "order" : 1,
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "type1" : {
+            "_source" : {"enabled" : true }
+        }
+    }
+}
+'
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;对于Elasticsearch的搜索查询来说，数据大致可以分为两类：确切值与全文文本
