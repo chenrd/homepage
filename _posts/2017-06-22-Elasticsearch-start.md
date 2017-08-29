@@ -96,6 +96,14 @@ GET /_cluster/health
 ![posts_elas](http://chenrd.me/images/posts/elas_0205.png)
 ![posts_elas](http://chenrd.me/images/posts/elas_0206.png)
 
+&nbsp;&nbsp;&nbsp;&nbsp;上面讲述了索引与分片的关系，那么Elasticsearch又是如何确定文档改存放在哪个分片上面呢？
+
+```
+shard = hash(routing) % number_of_primary_shards
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;通过上面这个简单的算法，确定文档存放在哪个分片，routing可以自定义，默认是文档_id
+
 
 ### 数据结构
 
@@ -163,15 +171,135 @@ GET /_cluster/health
 
 &nbsp;&nbsp;&nbsp;&nbsp;自动生成的ID有22个字符长，URL-safe, Base64-encoded string universally unique identifiers, 或者叫 UUIDs。
 
+### 数据类型及映射
 
+Elasticsearch支持以下简单字段类型：
 
-## 全文检索，确切值查询
+|类型            |表示的数据类型             |
+|:---------------|:-----------------------|
+|String	        |string             |
+|Whole number	|byte, short, integer, long|
+|Floating point	|float, double      |
+|Boolean	    |boolean        |
+|Date	        |date           |
+
+当你索引一个包含新字段的文档——一个之前没有的字段——Elasticsearch将使用动态映射猜测字段类型，这类型来自于JSON的基本数据类型，使用以下规则：
+
+|JSON type	        |Field type
+|:------------------|:-----------------------|
+|Boolean:true or false	           |"boolean"|
+|Whole number:123	      |"long"           |
+|Floating point:123.45	    |"double"         |
+|String, valid date: "2014-09-15"   |"date"  |
+|String: "foo bar"  |"string"                |
+
+重要命令，查看类型映射：
+
+```
+GET /gb/_mapping/tweet  // db是索引，tweet是文档
+{
+   "gb": {
+      "mappings": {
+         "tweet": {
+            "properties": {
+               "date": {
+                  "type": "date",
+                  "format": "strict_date_optional_time||epoch_millis"
+               },
+               "name": {
+                  "type": "string"
+               },
+               "tweet": {
+                  "type": "string"
+               },
+               "user_id": {
+                  "type": "long"
+               }
+            }
+         }
+      }
+   }
+}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;当你向索引中加入数据的时候Elasticsearch会根据你入库的数据来猜测数据类型，自动完成类型映射。如果不想Elasticsearch来自动完成映射可以通过自定义实现：
+
+#### 自定义字段映射
+
+&nbsp;&nbsp;&nbsp;&nbsp;虽然大多数情况下基本数据类型已经能够满足，但你也会经常需要自定义一些特殊类型（fields），特别是字符串字段类型。 自定义类型可以使你完成以下几点：
+
+- 区分全文（full text）字符串字段和准确字符串字段（译者注：就是分词与不分词，全文的一般要分词，准确的就不需要分词，比如『中国』这个词。全文会分成『中』和『国』，但作为一个国家标识的时候我们是不需要分词的，所以它就应该是一个准确的字符串字段）。
+
+- 使用特定语言的分析器（译者注：例如中文、英文、阿拉伯语，不同文字的断字、断词方式的差异）
+
+- 优化部分匹配字段
+
+- 指定自定义日期格式（译者注：这个比较好理解,例如英文的 Feb,12,2016 和 中文的 2016年2月12日）
+
+#### index
+
+|值	          |解释         |
+|:------------|:------------|
+|analyzed	  |首先分析这个字符串，然后索引。换言之，以全文形式索引此字段。|
+|not_analyzed |索引这个字段，使之可以被搜索，但是索引内容和指定值一样。不分析此字段。|
+|no	          |不索引这个字段。这个字段不能为搜索到。|
+
+#### 分析器
+&nbsp;&nbsp;&nbsp;&nbsp;标准分析器、简单分析器、空格分析器、语言分析器，详细请看[下一小节](#查询分析器，分析器的几个步骤)
+
+添加索引的时候指定映射：
+
+```
+PUT /gb <1>
+{
+  "mappings": {
+    "tweet" : {
+      "properties" : {
+        "tweet" : {
+          "type" :    "string",
+          "analyzer": "english"
+        },
+        "date" : {
+          "type" :   "date"
+        },
+        "name" : {
+          "type" :   "string"
+        },
+        "user_id" : {
+          "type" :   "long"
+        }
+      }
+    }
+  }
+}
+```
+
+#### 更新映射
+
+> ###重要
+>
+>&nbsp;&nbsp;&nbsp;&nbsp;你可以向已有映射中增加字段，但你不能修改它。如果一个字段在映射中已经存在，这可能意味着那个字段的数据已经被索引。如果你改变了字段映射，那已经被索引的数据将错误并且不能被正确的搜索到。
+>
+>&nbsp;&nbsp;&nbsp;&nbsp;类似常用命令章节中：字符串排序
+```
+PUT /gb/_mapping/tweet
+{
+  "properties" : {
+    "tag" : {
+      "type" :    "string",
+      "index":    "not_analyzed"
+    }
+  }
+}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;对于Elasticsearch的搜索查询来说，数据大致可以分为两类：确切值与全文文本
 
 1、GET /_search?q=date:2014-09-15确切值查询
 
 2、GET /_search?q=2014-09-15全文检索  
 
-## 查询分析器，分析器的几个步骤
+### 查询分析器，分析器的几个步骤
 
 1、第一步：字符过滤器，字符过滤器能够去除HTML标记，或者转换"&"为"and"
 
@@ -196,4 +324,9 @@ GET /_cluster/health
 
 - 数组：{name: "test", child:[{name: "小孩1", age: 2}, {name: "小孩2", age: 1}]} -> {name: "test", "child.name": ["小孩1", "小孩2"], "child.age":[2, 1]}
 
+
+
+### 性能问题记录
+
+- 警告： 对 analyzed 字段进行强制排序会消耗大量内存
 

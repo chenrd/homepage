@@ -70,9 +70,7 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
 
 8、查看对象（表格）字段的类型：GET /gb/_mapping/tweet  
 
-9、分页：GET /_search?size=5&form=10  
-
-10、GET /gb/tweet/_validate/query 验证查询语句是否合法，GET /_validate/query?explain 加explain会返回explanation描述  
+9、GET /gb/tweet/_validate/query 验证查询语句是否合法，GET /_validate/query?explain 加explain会返回explanation描述  
     
     {
        "query": {
@@ -92,3 +90,76 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
             "failed" :      0
         }
     }
+
+10、分页，排序呢：
+```
+GET /_search?size=5&form=10  
+GET /_search
+{
+    "form": 10,
+    "size": 5
+}
+
+//排序
+GET /_search
+{
+    "query" : {
+       ...
+    },
+    "sort": { "date": { "order": "desc" }}
+}
+//多级排序
+GET /_search
+{
+    "query" : {
+        ...
+    },
+    "sort": [
+        { "date":   { "order": "desc" }},
+        { "_score": { "order": "desc" }}
+    ]
+}
+//多值字段排序
+"sort": {
+    "dates": {
+        "order": "asc",
+        "mode":  "min"
+    }
+}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;被分析器(analyser)处理过的字符称为analyzed field，analyzed字符串字段同时也是多值字段，在这些字段上排序往往得不到你想要的值。这个时候可以改变一下字段的映射：
+
+```
+"tweet": {
+    "type":     "string",
+    "analyzer": "english"
+}
+```
+
+改变之后如下：
+
+```
+"tweet": { <1>
+    "type":     "string",
+    "analyzer": "english",
+    "fields": {
+        "raw": { <2>
+            "type":  "string",
+            "index": "not_analyzed"
+        }
+    }
+}
+```
+
+```
+GET /_search
+{
+    "query": {
+        "match": {
+            "tweet": "elasticsearch"
+        }
+    },
+    "sort": "tweet.raw"
+}
+```
