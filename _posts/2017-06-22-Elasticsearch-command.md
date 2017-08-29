@@ -8,6 +8,15 @@ status: public
 title: Elasticsearch常用命令记录
 ---
 
+```
+curl 'localhost:9200/_cat/nodes?v'   查看集群中所有的节点信息
+curl 'localhost:9200/_cat/indices?v' 查看所有索引
+curl -XPUT 'localhost:9200/customer?pretty' 创建索引名称为customer的索引
+curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '{"name": "John Doe"}' 索引一篇文档，类型为external，文档ID：1
+curl -XGET 'localhost:9200/customer/external/1?pretty' 查询一篇文档
+curl -XDELETE 'localhost:9200/customer?pretty' 删除索引名称为customer的索引
+```
+
 1、获取文档GET /website/blog/123?_source=title,text，查询文档且文档中的_source对象只显示title,text属性  
 GET /website/blog/123/_source,查询文档只显示文档中的_source对象  
 

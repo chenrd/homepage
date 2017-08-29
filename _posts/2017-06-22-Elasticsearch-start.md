@@ -7,6 +7,7 @@ layout: post
 status: public
 title: Elasticsearch详细讲解从安装开始
 ---
+### 安装
 
 &nbsp;&nbsp;&nbsp;&nbsp;说明：这里是对Elasticsearch学习的记录总结，[中文文档](https://es.xiaoleilu.com/010_Intro/05_What_is_it.html)
 
@@ -35,6 +36,30 @@ $ curl 'http://localhost:9200/?pretty'
   "tagline" : "You Know, for Search"
 }
 ```
+
+### RESTful API
+
+&nbsp;&nbsp;&nbsp;&nbsp;其他所有程序语言都可以使用RESTful API，通过9200端口的与Elasticsearch进行通信，你可以使用你喜欢的WEB客户端，事实上，如你所见，你甚至可以通过curl命令与Elasticsearch通信
+
+> NOTE
+>
+> Elasticsearch官方提供了多种程序语言的客户端——Groovy，Javascript， .NET，PHP，Perl，Python，以及 Ruby——还有很多由社区提供的客户端和插件，所有这些可以在文档中找到。
+
+&nbsp;&nbsp;&nbsp;&nbsp;向Elasticsearch发出的请求的组成部分与其它普通的HTTP请求是一样的：
+
+```
+curl -X<VERB> '<PROTOCOL>://<HOST>:<PORT>/<PATH>?<QUERY_STRING>' -d '<BODY>'
+```
+
+- VERB HTTP方法：GET, POST, PUT, HEAD, DELETE
+- PROTOCOL http或者https协议（只有在Elasticsearch前面有https代理的时候可用）
+- HOST Elasticsearch集群中的任何一个节点的主机名，如果是在本地的节点，那么就叫localhost
+- PORT Elasticsearch HTTP服务所在的端口，默认为9200
+- PATH API路径（例如_count将返回集群中文档的数量），PATH可以包含多个组件，例如_cluster/stats或者_nodes/stats/jvm
+- QUERY_STRING 一些可选的查询请求参数，例如?pretty参数将使请求返回更加美观易读的JSON数据
+- BODY 一个JSON格式的请求主体（如果请求需要的话）
+
+### elasticsearch.yml
 
 &nbsp;&nbsp;&nbsp;&nbsp;配置文件elasticsearch.yml
 
