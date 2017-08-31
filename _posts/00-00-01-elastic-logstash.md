@@ -103,3 +103,14 @@ bin/logstash-plugin install logstash-output-webhdfs
 ### filter
 
 [fiter-官方](https://www.elastic.co/guide/en/logstash/5.5/filter-plugins.html)
+[官方各种过滤插件的配置实例](https://www.elastic.co/blog/logstash-dude-wheres-my-chainsaw-i-need-to-dissect-my-logs)
+
+> 注意
+> 过滤的配置非常的复杂需要调试，开发的时候可以开启debug级别的日志，方便调试配置
+> 开启方法：conf/logstash.yml
+```
+log.level: trace
+path.logs: /Users/chenrd/logstash-5.5.2/logs/
+```
+
+

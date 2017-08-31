@@ -155,3 +155,44 @@ output.redis:
 ```
 filebeat.sh -configtest -e
 ```
+
+> 注意
+> conf目录下面有一个文件filebeat.full.yml，这个文件里面相信描述了所有的配置属性
+> 开发的时候可以开启日志级别为debug级别，以及实时发送日志。不开启filelib日志缓存
+```
+logging.level: debug
+bulk_max_size: 0
+```
+
+下面来看一段filebeat运行时的日志：
+
+DBG  Drop line as it does match one of ... 这一段话的意思是符合exclude_lines表达式删除了行
+
+DBG  Publish: {... 正确发送数据了
+
+```
+2017/08/31 07:49:25.867301 log.go:206: DBG  Drop line as it does match one of the exclude patterns2017-08-31 15:49:25.721 DEBUG 15312 --- [nio-8080-exec-8] com.lefit.service.UserService            : {"result":{"openid":"o23m8s9Zaxrs2eVaLo6CDIHsp0As","user_id":117146,"exp_timestamp":1504251639},"status":{"code":"00000","msg":"处理成功","runtime":"42.6650"}}
+2017/08/31 07:49:25.867321 log_file.go:84: DBG  End of file reached: /opt/apps/logs/stdout.log; Backoff now.
+2017/08/31 07:49:26.380197 metrics.go:39: INFO Non-zero metrics in the last 30s: libbeat.publisher.published_events=7 libbeat.redis.publish.read_bytes=28 libbeat.redis.publish.write_bytes=3297 publish.events=93 registrar.states.update=93 registrar.writes=6
+2017/08/31 07:49:26.556064 prospector.go:183: DBG  Run prospector
+2017/08/31 07:49:26.556092 prospector_log.go:70: DBG  Start next scan
+2017/08/31 07:49:26.556156 prospector_log.go:226: DBG  Check file for harvesting: /opt/apps/logs/stdout.log
+2017/08/31 07:49:26.556170 prospector_log.go:259: DBG  Update existing file for harvesting: /opt/apps/logs/stdout.log, offset: 1253244
+2017/08/31 07:49:26.556176 prospector_log.go:311: DBG  Harvester for file is still running: /opt/apps/logs/stdout.log
+2017/08/31 07:49:26.556183 prospector_log.go:91: DBG  Prospector states cleaned up. Before: 1, After: 1
+2017/08/31 07:49:26.613796 spooler.go:89: DBG  Flushing spooler because of timeout. Events flushed: 17
+2017/08/31 07:49:26.613927 client.go:214: DBG  Publish: {
+  "@timestamp": "2017-08-31T07:49:25.867Z",
+  "beat": {
+    "hostname": "iZbp10iksa8sifg1cmgs6aZ",
+    "name": "iZbp10iksa8sifg1cmgs6aZ",
+    "version": "5.5.2"
+  },
+  "input_type": "log",
+  "message": "2017-08-31 15:49:25.170  INFO 15312 --- [nio-8080-exec-3] com.lefit.controller.CoachController     : 查询请求入参：{\"coachId\":841,\"page\":{\"pageSize\":10,\"start\":0},\"userId\":117146}",
+  "offset": 1252661,
+  "source": "/opt/apps/logs/stdout.log",
+  "type": "log"
+}
+
+```

@@ -111,11 +111,15 @@ nnohup ./logstash -f ../conf/nginx_log.conf >/dev/null 2>&1 &
 
 ### reids到indexer logstash - elasticSearch
 
-从redis到indexer logstash，需要配置indexer logstash订阅到redis的对应渠道上面，下文中的：input -> redis -> key
+&nbsp;&nbsp;&nbsp;&nbsp;与上面相同的安装方式，在自己的indexer服务器上面安装logstash。
 
-中间还有一块fiter，入库的数据可能不符合要求这里需要用filter处理之后，统一格式再输出到elasticsearch中
+&nbsp;&nbsp;&nbsp;&nbsp;从redis到indexer logstash，需要配置indexer logstash订阅到redis的对应渠道上面，下文中的：input -> redis -> key
 
-具体filter的用法请看作者的另外一篇文章：[logstash日志输出]
+&nbsp;&nbsp;&nbsp;&nbsp;中间还有一块fiter，入库的数据可能不符合要求这里需要用filter处理之后，统一格式再输出到elasticsearch中
+
+&nbsp;&nbsp;&nbsp;&nbsp;具体logstash的用法请看作者的另外一篇文章：[logstash日志输出](http://chenrd.me/2017/08/15/elastic-logstash/)
+
+> 注意elasticsearch的安装及详细用法可以查看文章[Elasticsearch详细讲解从安装开始](http://chenrd.me/2017/06/22/elastic-elasticsearch-start/)
 
 ```
 input {
@@ -218,6 +222,28 @@ output {
 
 ```
 
+### Kibana
+
+配置不做详细解释，conf/kibana.yml文件对配置项有详细描述，开发情况下默认启动就可以了
+
+Kibana默认的路径http://localhost:5601/
+
+|菜单     |功能             |
+|:--------|:---------------|
+|Discover |显示所有字段，直观查看时间段内的所有日志|
+|Visuablize|自定义图表       |
+|Dashboard |图表             |
+|Timelion  |图表             |
+|dev Tools |开发工具，直接查询语句 |
+|Management|配置              |
+
+![主图](http://chenrd.me/images/posts/elk_02.jpg)
+
+图中：Use event times to create index names \[DEPRECATED\] 按日期配置
+
+正确的例子：\[logstash-log-\]YYYY.MM.DD
+
+![Discover](http://chenrd.me/images/posts/elk_03.jpg)
 
 
 
