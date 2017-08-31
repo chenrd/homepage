@@ -1,5 +1,5 @@
 ---
-categories: logstash
+categories: ELK
 date: 2017-08-15 22:51
 description: 'logstash日志分析'
 keywords: logstash,ELK,日志分析
