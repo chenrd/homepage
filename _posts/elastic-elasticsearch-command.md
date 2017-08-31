@@ -1,5 +1,5 @@
 ---
-categories: Elasticsearch
+categories: ELK
 date: 2017-06-22 14:54
 description: 'Elasticsearch命令'
 keywords: Elasticsearch,全文检索,command,命令
@@ -105,7 +105,7 @@ GET /_search?q=%2Bname%3Ajohn+%2Btweet%3Amary(+name:john +tweet:mary) 查找name
 GET /_search?size=5&form=10  
 GET /_search
 {
-    "form": 10,
+        "form": 10,
     "size": 5
 }
 

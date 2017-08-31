@@ -111,6 +111,121 @@ nnohup ./logstash -f ../conf/nginx_log.conf >/dev/null 2>&1 &
 
 ### reids到indexer logstash - elasticSearch
 
+从redis到indexer logstash，需要配置indexer logstash订阅到redis的对应渠道上面，下文中的：input -> redis -> key
+
+中间还有一块fiter，入库的数据可能不符合要求这里需要用filter处理之后，统一格式再输出到elasticsearch中
+
+具体filter的用法请看作者的另外一篇文章：[logstash日志输出]
+
+```
+input {
+    redis {
+	    data_type => "channel"
+        key => "logstash-list"
+        host => "121.40.92.116"
+        port => 6379
+        password => "@@leke_admin@@"
+	    batch_count => 1
+	    threads => 1
+	    type => "nginxlog"
+	    id => "nginxlog"
+    }
+    redis {
+        data_type => "channel"
+        key => "parentlog"
+        host => "121.40.92.116"
+        port => 6379
+        password => "@@leke_admin@@"
+        batch_count => 1
+        threads => 1
+        type => "webapilog"
+	id => "webapilog"
+    }
+}
+filter {
+  if [id] == "nginxlog" {
+    ruby {
+	init => "@kname = ['http_x_forwarded_for','time_local','request','status','body_bytes_sent','request_body','content_length','http_referer','http_user_agent','http_cookie','remote_addr','hostname','upstream_addr','upstream_response_time','request_time']"
+	code => "
+	    new_event = LogStash::Event.new(Hash[@kname.zip(event.get('message').split('|'))])
+	    new_event.remove('@timestamp')
+	    event.append(new_event)
+	"
+    }
+    if [request] {
+	ruby {
+	    init => "@kname = ['method', 'uri', 'verb']"
+	    code => "
+		new_event = LogStash::Event.new(Hash[@kname.zip(event.get('request').split(' '))])
+                new_event.remove('@timestamp')
+                event.append(new_event)
+	    "
+	    
+	}
+    	if [uri] {
+            ruby {
+                init => "@kname = ['url_path','url_args']"
+                code => "
+                    new_event = LogStash::Event.new(Hash[@kname.zip(event.get('uri').split('?'))])
+                    new_event.remove('@timestamp')
+                    event.append(new_event)
+                "
+            }
+            kv {
+                prefix => "url_"
+                source => "url_args"
+                field_split => "& "
+                remove_field => [ "url_args","uri","request" ]
+            }
+        }
+    }
+    mutate {
+        convert => [
+            "body_bytes_sent" , "integer",
+            "content_length", "integer",
+            "upstream_response_time", "float",
+            "request_time", "float"
+        ]
+    }
+    date {
+        match => [ "time_local", "dd/MMM/yyyy:hh:mm:ss Z" ]
+        locale => "en"
+    }
+  }
+    if [type] == "log" {
+	dissect {
+	    mapping => {
+	    	"message" => "%{date} %{+date} %{level} %{line} %{msg}"
+	    }	
+	}
+	date {
+            match => [ "date", "dd/MMM/yyyy:HH:mm:ss Z" ]
+            locale => "en"
+    	}
+    }
+}
+output {
+    elasticsearch {
+        hosts => ["localhost:9200"]
+        index => "logstash-%{type}-%{+YYYY.MM.dd}"
+        document_type => "%{type}"
+        flush_size => 20000
+        idle_flush_time => 10
+        sniffing => true
+        template_overwrite => true
+    }
+}
+
+```
+
+
+
+
+### 问题记录
+
+- elastics @timestamp 默认使用的是UTC时区，获取的时候比中国晚了8小时，elastics官方推荐的解决办法是在kibana上面切换时间显示来解决这个问题。
+
+- 使用date插件来解决@timestamp时区不对的问题，date插件转换过后的属性值会替换掉原来的@timestamp
 
 
 

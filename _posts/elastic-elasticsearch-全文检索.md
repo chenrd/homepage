@@ -1,7 +1,7 @@
 ---
-categories: Elasticsearch
+categories: ELK
 date: 2017-07-03 20:02
-description: 'Elasticsearch搜索查询'
+description: 'Elasticsearch全文检索'
 keywords: Elasticsearch,全文检索,command,命令,查询,搜索
 layout: post
 status: public

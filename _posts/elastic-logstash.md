@@ -17,13 +17,16 @@ title: logstash日志输出
 
 解压压缩包之后就成功了，非常简单。
 
-### bin/目录下的命令
-
 logstash命令，启动命令：
 
 ```
 $ ./logstash -f nginx_log.conf 
 ```
+
+> 重点
+> 一个启动文件里面可以与多个input,只能有一个output。如果要针对不同的input输出到不同的地方，可以通过input的type属性来判断输出
+>
+> logstash启动的时候如果有多个配置文件，logstash会自动把多个文件拼接成一个文件启动
 
 上面的命令是守护进程模式启动，退出之后进程就结束了，想要长期运行可以用下面的命令：
 
@@ -67,4 +70,36 @@ bin/logstash-plugin install logstash-output-webhdfs
 
 原因就是启动的选定的文件里面使用的插件没有安装。
 
+### 公共属性
 
+|字段         |描述                 |
+|:----------|:--------------------|
+|add_filed  |向事件添加一个字段      |
+|codec      |编解码器              |
+|enable_metric|                   |
+|id           |强烈推荐设置此值，当有多个相同的插件时，可以区分|
+|tags       |可以帮助稍后处理       |
+|type       |                     |
+
+### input
+
+&nbsp;&nbsp;&nbsp;&nbsp;input 下面有非常多的插件，常用的有：file,syslog,tcp,redis,log4j等，详细的插件列表及插件使用方法可以查看[官方文档](https://www.elastic.co/guide/en/logstash/current/input-plugins.html)
+
+&nbsp;&nbsp;&nbsp;&nbsp;这里不对所有的插件详细讲解，只是把用到的插件记录一下，第一个log4j
+
+#### log4j
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+|字段       |描述                 |
+|:----------|:--------------------|
+|mode       |client模式会主动请求java应用端获取日志，server模式会接收java应用发过来的日志 |
+|host       |启动logstash服务的主机，即localhost |
+|port       |端口号              |
+|tags       |可以帮助稍后处理       |
+|type       |                     |
+
+
+### filter
+
+[fiter-官方](https://www.elastic.co/guide/en/logstash/5.5/filter-plugins.html)

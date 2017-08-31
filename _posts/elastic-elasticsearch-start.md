@@ -1,5 +1,5 @@
 ---
-categories: Elasticsearch
+categories: ELK
 date: 2017-06-22 14:54
 description: '全文检索数据库Elasticsearch开始学习'
 keywords: Elasticsearch,全文检索
@@ -449,4 +449,5 @@ curl -XPUT localhost:9200/_template/template_2 -d '
 ### 性能问题记录
 
 - 警告： 对 analyzed 字段进行强制排序会消耗大量内存
+
 
