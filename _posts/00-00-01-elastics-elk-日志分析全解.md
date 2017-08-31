@@ -93,7 +93,7 @@ nnohup ./logstash -f ../conf/nginx_log.conf >/dev/null 2>&1 &
 
 &nbsp;&nbsp;&nbsp;&nbsp;查看启动日志，基本没问题，到这里就已经启动了第一个Shipper logstash实例了，到你的服务器集群中可以一台一台的部署上去，根据自己的需求选中不同的input插件（file,syslog,tcp等）监控不同的日志
 
-&nbsp;nbsp;&nbsp;&nbsp;插件列表：
+&nbsp;&nbsp;&nbsp;&nbsp;常用插件列表：[官方所有插件]()
 
 |插件                 |作用                          |
 |:-------------------|:-----------------------------|
@@ -119,7 +119,9 @@ nnohup ./logstash -f ../conf/nginx_log.conf >/dev/null 2>&1 &
 
 &nbsp;&nbsp;&nbsp;&nbsp;具体logstash的用法请看作者的另外一篇文章：[logstash日志输出](http://chenrd.me/2017/08/15/elastic-logstash/)
 
-> 注意elasticsearch的安装及详细用法可以查看文章[Elasticsearch详细讲解从安装开始](http://chenrd.me/2017/06/22/elastic-elasticsearch-start/)
+> 注意
+
+> elasticsearch的安装及详细用法可以查看文章[Elasticsearch详细讲解从安装开始](http://chenrd.me/2017/06/22/elastic-elasticsearch-start/)
 
 ```
 input {
@@ -237,13 +239,13 @@ Kibana默认的路径http://localhost:5601/
 |dev Tools |开发工具，直接查询语句 |
 |Management|配置              |
 
-![主图](http://chenrd.me/images/posts/elk_02.jpg)
+![主图](http://chenrd.me/images/posts/elk_02.png)
 
 图中：Use event times to create index names \[DEPRECATED\] 按日期配置
 
 正确的例子：\[logstash-log-\]YYYY.MM.DD
 
-![Discover](http://chenrd.me/images/posts/elk_03.jpg)
+![Discover](http://chenrd.me/images/posts/elk_03.png)
 
 
 
