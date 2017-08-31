@@ -17,6 +17,7 @@ title: filebeat日志收集
 &nbsp;&nbsp;&nbsp;&nbsp;filebeat作为轻量级日志收集器，性能方面比logstash优异非常多，logstash却省在灵活。
 
 > 重点
+>
 > filebeat作为elastic的成员，可以无缝的加入到原来的ELK结构当中，可以使用filebeat替代logstash的Shipper角色。同时filebeat可以直接输出到redis、logstash、elasticsearch等。
 
 ### beats系列采集器
@@ -83,9 +84,13 @@ output.elasticsearch:
 目前5.5版本支持的output：[官方文档详细配置](https://www.elastic.co/guide/en/beats/filebeat/5.5/filebeat-configuration-details.html)
 
 结构思考：
+
 1、多个filebeat -> (可以是多个缓存作用)redis -> logstash - elasticsearch
+
 2、多个filebeat -> elasticsearch
+
 3、多个filebeat -> logstash -> elasticsearch
+
 4、filebeat与logstash结合(作为Shipper角色) -> (可以是多个缓存作用)redis -> logstash - elasticsearch
 
 
@@ -93,7 +98,7 @@ output.elasticsearch:
 
 &nbsp;&nbsp;&nbsp;&nbsp;filebeat -> logstash -> elasticsearch把logstash作为日志过滤器来使用，不推荐（个人）
 
-&nbsp;&nbsp;&nbsp;&nbsp;由于logstash的灵活性及强大之处（非常的插件，各种日志处理），可以使用filebeat与logstash结合，logstash中定义多个input，filebeat作为input之一，满足一种文件收集
+&nbsp;&nbsp;&nbsp;&nbsp;由于logstash的灵活性及强大之处（非常多的插件，各种日志处理），可以使用filebeat与logstash结合，logstash中定义多个input，filebeat作为input之一，满足一种文件收集
 
 ### redis output
 
@@ -116,8 +121,11 @@ output.elasticsearch:
 |max_retries  |发布失败时，重试的次数，小于0的值重试，直到所有事件发布|
 
 > bulk_max_size
+
 > 如果节拍发送单个事件，则会将事件分批收集。如果Beat发布大批事件（大于指定的值 bulk_max_size），则批处理将被拆分
+
 > 指定更大的批量大小可以通过降低发送事件的开销来提高性能。然而，大批量大小也可能会增加处理时间，这可能会导致API错误，杀死连接，超时发布请求以及最终降低吞吐量。
+
 > 设置bulk_max_size为小于或等于0的值将禁用libbeat中的缓冲。当禁用缓冲时，发布单个事件（例如Packetbeat）的Beats会将每个事件直接发送到Redis。批量发布数据（如Filebeat）的节拍将根据假脱机程序大小批量发送事件
 
 &nbsp;&nbsp;&nbsp;&nbsp;redis outout 通过Redis RPUSH（默认）、Pub/Sub（发布/订阅）实现日志的传输，key/keys属性来指定对应的频道，其中keys作为动态设置频道
@@ -157,7 +165,9 @@ filebeat.sh -configtest -e
 ```
 
 > 注意
+
 > conf目录下面有一个文件filebeat.full.yml，这个文件里面相信描述了所有的配置属性
+
 > 开发的时候可以开启日志级别为debug级别，以及实时发送日志。不开启filelib日志缓存
 ```
 logging.level: debug
