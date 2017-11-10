@@ -77,3 +77,12 @@ spring-boot-devtools 加 springloaded实现热加载，类修改之后重新编�
 idea 没有开启自动编译的话，需要收到Build -> compile 当前类...
 开启自动编译的方法查看：wiki - idea/mac 
 
+#### 自定义servlet
+
+> 官方解释 
+> A @Bean of type Servlet or ServletRegistrationBean installs that bean in the container as if it were a <servlet/> and <servlet-mapping/> in web.xml.
+
+
+
+#### 自定义servlet-filter
+
