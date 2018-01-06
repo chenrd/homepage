@@ -1,11 +1,11 @@
 ---
 categories: java
 date: 2017-09-23
-description: 'java cas原子性,concurrent包的安全性解析'
-keywords: java,java 1.8,设计模式
+description: 'java线程锁概念解析'
+keywords: java, lock, 锁，concurrent
 layout: post
 status: public
-title: java cas,concurrent包的安全性解析
+title: java线程锁概念解析
 ---
 
 开始之前来了解一下锁的几个概念
