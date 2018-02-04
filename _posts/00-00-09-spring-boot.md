@@ -11,3 +11,5 @@ title: spring-boot
 project: spring-boot-autoconfigure spring boot 自动化配置的入口，application.properties
 
 project: spring-boot-autoconfigure : org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration 自动加载数据源的入口
+
+spring boot 依赖三大容器启动：tomcat, jetty, undertow. EmbeddedServletContainer
